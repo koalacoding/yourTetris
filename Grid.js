@@ -64,7 +64,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 				return;
 			}
 
-			context.fillRect(x + 3, y + 3, this.widthStep - 5, this.heightStep - 5);
+			context.fillRect(x + 3, y + 3, this.widthStep - 6, this.heightStep - 6);
 		}
 
 		/*----------------------------------
