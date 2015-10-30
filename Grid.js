@@ -4,6 +4,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	this.widthStep = width / xNumberOfSquare;
 	this.heightStep = height / yNumberOfSquare;
 
+	this.gameOver = false;
+
 	/*----------------------------
 	------INITIALIZE GRID DATA----
 	----------------------------*/
@@ -90,61 +92,130 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	------NEW TETROMINO----
 	---------------------*/
 
-	this.newTetromino = function(form) {
-		var thirdOfHorizontalGridSize = Math.floor(xNumberOfSquare / 3);
-    switch (form) {
-        case 0: // ****
-            this.gridData[thirdOfHorizontalGridSize][0] = 2; // 2 = moving tetromino square.
-            this.gridData[thirdOfHorizontalGridSize + 1][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 3][0] = 2;
-            break;
-        case 1: // *
-                // ***
-            this.gridData[thirdOfHorizontalGridSize][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][1] = 2;
-            break;
-        case 2: //   *
-                // ***
-            this.gridData[thirdOfHorizontalGridSize + 2][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][1] = 2;
-            break;
-        case 3: // **
-                // **
-            this.gridData[thirdOfHorizontalGridSize][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            break;
-        case 4: //  **
-                // **
-            this.gridData[thirdOfHorizontalGridSize + 1][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            break;
-        case 5: //  *
-                // ***
-            this.gridData[thirdOfHorizontalGridSize + 1][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][1] = 2;
-            break;
-        case 6: // **
-                //  **
-            this.gridData[thirdOfHorizontalGridSize][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
-            this.gridData[thirdOfHorizontalGridSize + 2][1] = 2;
-            break;
-        default:
-        	alert('Error trying to generate a new tetromino.');
-   }
- 	}
+
+		/*--------------------------------------------------------
+		------ARE NEW TETROMINO COORDINATES ALREADY OCCUPIED ?----
+		--------------------------------------------------------*/
+
+		this.areNewTetrominoCoordinatesAlreadyOccupied = function(newTetrominoCoordinates) {
+			for (var i = 0; i < newTetrominoCoordinates.length; i++) {
+				var x = newTetrominoCoordinates[i][0];
+				var y = newTetrominoCoordinates[i][1];				
+				if (this.gridData[x][y] != 0) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/*-----------------------------------------------------
+		------GENERATE NEW TETROMINO IF NO ACTIVE TETROMINO----
+		-----------------------------------------------------*/
+
+		this.generateNewTetrominoIfNoActiveTetromino = function() {
+			var thereIsAnActiveTetromino = false;
+
+			// Checking if there is an active tetromino.
+			for (var y = 0; y < yNumberOfSquare; y++) {
+				for (var x = 0; x < xNumberOfSquare; x++) {
+					if (this.gridData[x][y] == 2) { // If the current square is not empty.
+						thereIsAnActiveTetromino = true;
+					}
+				}
+			}
+
+			if (thereIsAnActiveTetromino == false) {
+				var randomNumber = Math.floor(Math.random() * 7); // Random number between 0 and 6.
+				var newTetrominoCoordinates = this.newTetrominoCoordinates(randomNumber);
+
+				// If there is already a square in any of the new tetromino coordinates.
+				if (this.areNewTetrominoCoordinatesAlreadyOccupied(newTetrominoCoordinates) == true) {
+					this.gameOver = true;
+				}
+
+				else { // If there is space for the new tetromino, we generate it.
+					this.newTetromino(newTetrominoCoordinates);
+				}
+			}
+		}
+
+		/*---------------------------------
+		------NEW TETROMINO COORDINATES----
+		---------------------------------*/
+
+		// Return an array containing the coordinates of every square of the new tetromino.
+		this.newTetrominoCoordinates = function(form) {
+			var newTetrominoCoordinates = [];
+			var thirdOfHorizontalGridSize = Math.floor(xNumberOfSquare / 3);
+	    switch (form) {
+	        case 0: // ****
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 3, 0]);
+	            break;
+	        case 1: // *
+	                // ***
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 1]);
+	            break;
+	        case 2: //   *
+	                // ***
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 1]);
+	            break;
+	        case 3: // **
+	                // **
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            break;
+	        case 4: //  **
+	                // **
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            break;
+	        case 5: //  *
+	                // ***
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 1]);
+	            break;
+	        case 6: // **
+	                //  **
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 0]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 1, 1]);
+	            newTetrominoCoordinates.push([thirdOfHorizontalGridSize + 2, 1]);
+	            break;
+	        default:
+	        	alert('Error trying to generate a new tetromino.');
+	    }
+
+	    return newTetrominoCoordinates;
+	 	}
+
+		/*---------------------
+		------NEW TETROMINO----
+		---------------------*/
+
+		this.newTetromino = function(newTetrominoCoordinates) {
+			for (var i = 0; i < newTetrominoCoordinates.length; i++) {
+				var x = newTetrominoCoordinates[i][0];
+				var y = newTetrominoCoordinates[i][1];
+				this.gridData[x][y] = 2;
+			}
+		}
+
 
 	/*----------------------
 	------TETROMINO FALL----
@@ -181,6 +252,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		---------------------------*/
 
 		this.makeTetrominoFall = function() {
+			this.immobilizeActiveTetrominoIfCannotFall();
+
 			if (this.canTetrominoFall() == true) {
 				for (var y = yNumberOfSquare - 2; y >= 0; y--) {
 					for (var x = 0; x < xNumberOfSquare; x++) {
@@ -192,6 +265,25 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 				}
 			}
 
+			this.generateNewTetrominoIfNoActiveTetromino();
+
 			this.drawAllTetrominoSquares();
 		}
+
+
+	/*-----------------------------------
+	------IMMOBILIZE ACTIVE TETROMINO----
+	-----------------------------------*/	
+
+	this.immobilizeActiveTetrominoIfCannotFall = function() {
+		if (this.canTetrominoFall() == false) { // If the current tetromino cannot move down.
+			for (var y = 0; y < yNumberOfSquare; y++) {
+				for (var x = 0; x < xNumberOfSquare; x++) {
+					if (this.gridData[x][y] == 2) {
+						this.gridData[x][y] = 1;
+					}
+				}
+			}			
+		}
+	}
 }
