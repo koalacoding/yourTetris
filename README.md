@@ -13,6 +13,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 
 ## To do.
 
+* Fix a bug when trying to move the active tetromino left or right when there is immobile squares on the same line.
 * Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.

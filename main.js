@@ -5,11 +5,7 @@ $(function() {
 	grid.initializeGridData();
 	grid.drawGrid();
 
-	grid.handleTetrominoMove();
+	grid.handleKeyPresses();
 
-	setInterval(function(){
-		if (grid.gameOver == false) {
-			grid.makeTetrominoFall();
-		}
-	}, 100);
+	grid.handleTetrominoFall();
 });

@@ -4,6 +4,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	this.widthStep = width / xNumberOfSquare;
 	this.heightStep = height / yNumberOfSquare;
 
+	this.fallingSpeed = 1000; // In millisecond.
+
 	var that = this;
 
 	this.gameOver = false;
@@ -204,7 +206,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	    }
 
 	    return newTetrominoCoordinates;
-	 	}
+	 	}	 	
 
 		/*---------------------
 		------NEW TETROMINO----
@@ -217,6 +219,23 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 				this.gridData[x][y] = 2;
 			}
 		}
+
+
+	/*-----------------------------------
+	------IMMOBILIZE ACTIVE TETROMINO----
+	-----------------------------------*/
+
+	this.immobilizeActiveTetrominoIfCannotFall = function() {
+		if (that.canTetrominoFall() == false) { // If the current tetromino cannot move down.
+			for (var y = 0; y < yNumberOfSquare; y++) {
+				for (var x = 0; x < xNumberOfSquare; x++) {
+					if (this.gridData[x][y] == 2) {
+						this.gridData[x][y] = 1;
+					}
+				}
+			}			
+		}
+	}		
 
 
 	/*----------------------
@@ -232,7 +251,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 			for (var y = yNumberOfSquare - 1; y > 0; y--) { // Starting at the bottom of the grid.
 				for (var x = 0; x < xNumberOfSquare; x++) {
-					if (this.gridData[x][y] == 2) { // If the current tetromino square is an active one.
+					if (that.gridData[x][y] == 2) { // If the current tetromino square is an active one.
 						activeTetrominoSquareFound = true;
 						// If we are at the last line of the grid or if the square below is not an empty one.
 						if (y == yNumberOfSquare - 1 || this.gridData[x][y + 1] != 0) {
@@ -252,42 +271,39 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		/*---------------------------
 		------MAKE TETROMINO FALL----
 		---------------------------*/
+		
+		this.handleTetrominoFall = function() {
+			var makeTetrominoFall;
+			makeTetrominoFall = setInterval(function() {
+														that.makeTetrominoFall();
+													}, that.fallingSpeed);
+
+			window.addEventListener("keydown", function(e) {
+					if (e.keyCode == 40) {
+						makeTetrominoFall = that.makeTetrominoFall();
+					}
+			}, false);				
+		}
 
 		this.makeTetrominoFall = function() {
-			this.immobilizeActiveTetrominoIfCannotFall();
+			that.immobilizeActiveTetrominoIfCannotFall();
 
-			if (this.canTetrominoFall() == true) {
-				for (var y = yNumberOfSquare - 2; y >= 0; y--) {
-					for (var x = 0; x < xNumberOfSquare; x++) {
-						if (this.gridData[x][y] == 2) {
-							this.gridData[x][y + 1] = 2;
-							this.gridData[x][y] = 0; // Emptying the place where the square was before falling.
+			if (that.gameOver == false) {
+				if (that.canTetrominoFall() == true) {
+					for (var y = yNumberOfSquare - 2; y >= 0; y--) {
+						for (var x = 0; x < xNumberOfSquare; x++) {
+							if (that.gridData[x][y] == 2) {
+								that.gridData[x][y + 1] = 2;
+								that.gridData[x][y] = 0; // Emptying the place where the square was before falling.
+							}
 						}
 					}
 				}
-			}
 
-			this.generateNewTetrominoIfNoActiveTetromino();
-
-			this.drawAllTetrominoSquares();
+				that.generateNewTetrominoIfNoActiveTetromino();
+				that.drawAllTetrominoSquares();
+			}	
 		}
-
-
-	/*-----------------------------------
-	------IMMOBILIZE ACTIVE TETROMINO----
-	-----------------------------------*/
-
-	this.immobilizeActiveTetrominoIfCannotFall = function() {
-		if (this.canTetrominoFall() == false) { // If the current tetromino cannot move down.
-			for (var y = 0; y < yNumberOfSquare; y++) {
-				for (var x = 0; x < xNumberOfSquare; x++) {
-					if (this.gridData[x][y] == 2) {
-						this.gridData[x][y] = 1;
-					}
-				}
-			}			
-		}
-	}
 
 
 	/*----------------------
@@ -295,12 +311,17 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	----------------------*/
 
 
-	this.handleTetrominoMove = function() {
-		window.onkeydown = function(event) {
-			that.moveTetrominoLeft(event);
-			that.moveTetrominoRight(event);
+		/*--------------------------
+		------HANDLE KEY PRESSES----
+		--------------------------*/
+
+		this.handleKeyPresses = function() {
+			window.onkeydown = function(event) {
+				that.moveTetrominoLeft(event);
+				that.moveTetrominoRight(event);
+				//that.accelerateTetrominoFall(event);
+			}
 		}
-	}
 
 
 		/*-------------------
@@ -338,6 +359,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 							
 						}
 					}
+
+					this.drawAllTetrominoSquares();
 				}
 			}
 
@@ -374,9 +397,10 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 								this.gridData[x + 1][y] = 2;
 								this.gridData[x][y] = 0; // Freeing the ancient square's position.
 							}
-							
 						}
 					}
+
+					this.drawAllTetrominoSquares();
 				}
-			}				
+			}
 }
