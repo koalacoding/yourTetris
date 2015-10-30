@@ -1,9 +1,3 @@
-/*---------------------------------------
------------------------------------------
-----------------GRID CLASS---------------
------------------------------------------
----------------------------------------*/
-
 function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	this.gridData = []; // 2d array.
 
@@ -59,10 +53,18 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		------DRAW TETROMINO SQUARE----
 		-----------------------------*/
 
-		this.drawTetrominoSquare = function(squareNumberX, squareNumberY) {
+		this.drawTetrominoSquare = function(squareNumberX, squareNumberY, color) {
 			var x = squareNumberX * this.widthStep;
 			var y = squareNumberY * this.heightStep;
-			context.fillRect(x, y, this.widthStep, this.heightStep);
+			context.fillStyle = color;
+			
+			// Using this to clean the non-white square traces.
+			if (color == "#FFFFFF") {
+				context.fillRect(x + 1, y + 1, this.widthStep - 2, this.heightStep - 2);
+				return;
+			}
+
+			context.fillRect(x + 3, y + 3, this.widthStep - 5, this.heightStep - 5);
 		}
 
 		/*----------------------------------
@@ -73,7 +75,11 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 			for (var y = 0; y < yNumberOfSquare; y++) {
 				for (var x = 0; x < xNumberOfSquare; x++) {
 					if (this.gridData[x][y] != 0) { // If the current square is not empty.
-						this.drawTetrominoSquare(x, y);
+						this.drawTetrominoSquare(x, y, "#FF0000");
+					}
+
+					else { // If the current square is empty.
+						this.drawTetrominoSquare(x, y, "#FFFFFF");
 					}
 				}
 			}			
@@ -96,7 +102,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
         case 1: // *
                 // ***
             this.gridData[thirdOfHorizontalGridSize][0] = 2;
-            this.gridData[thirdOfHorizontalGridSize,1] = 2;
+            this.gridData[thirdOfHorizontalGridSize][1] = 2;
             this.gridData[thirdOfHorizontalGridSize + 1][1] = 2;
             this.gridData[thirdOfHorizontalGridSize + 2][1] = 2;
             break;
@@ -139,21 +145,53 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
         	alert('Error trying to generate a new tetromino.');
    }
  	}
+
+	/*----------------------
+	------TETROMINO FALL----
+	----------------------*/
+
+		/*----------------------------
+		------CAN TETROMINO FALL ?----
+		----------------------------*/
+
+		this.canTetrominoFall = function() {
+			var activeTetrominoSquareFound = false;
+
+			for (var y = yNumberOfSquare - 1; y > 0; y--) { // Starting at the bottom of the grid.
+				for (var x = 0; x < xNumberOfSquare; x++) {
+					if (this.gridData[x][y] == 2) { // If the current tetromino square is an active one.
+						activeTetrominoSquareFound = true;
+						// If we are at the last line of the grid or if the square below is not an empty one.
+						if (y == yNumberOfSquare - 1 || this.gridData[x][y + 1] != 0) {
+							return false;
+						}
+					}
+				}
+
+				if (activeTetrominoSquareFound == true) {
+					return true;
+				}
+			}
+
+			return true;
+		}
+
+		/*---------------------------
+		------MAKE TETROMINO FALL----
+		---------------------------*/
+
+		this.makeTetrominoFall = function() {
+			if (this.canTetrominoFall() == true) {
+				for (var y = yNumberOfSquare - 2; y >= 0; y--) {
+					for (var x = 0; x < xNumberOfSquare; x++) {
+						if (this.gridData[x][y] == 2) {
+							this.gridData[x][y + 1] = 2;
+							this.gridData[x][y] = 0; // Emptying the place where the square was before falling.
+						}
+					}
+				}
+			}
+
+			this.drawAllTetrominoSquares();
+		}
 }
-
-
-/*---------------------------------
------------------------------------
-----------------MAIN---------------
------------------------------------
----------------------------------*/
-
-$(function() {
-  var context = $('#canvas')[0].getContext('2d');
-
-	var grid = new Grid(400, 10, 500, 16, context);
-	grid.initializeGridData();
-	grid.drawGrid();
-	grid.newTetromino(2);
-	grid.drawAllTetrominoSquares();
-});
