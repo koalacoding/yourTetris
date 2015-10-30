@@ -12,6 +12,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 
 ## To do.
 
+* Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
 * Top score system.
