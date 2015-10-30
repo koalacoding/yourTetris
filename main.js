@@ -5,6 +5,8 @@ $(function() {
 	grid.initializeGridData();
 	grid.drawGrid();
 
+	grid.handleTetrominoMove();
+
 	setInterval(function(){
 		if (grid.gameOver == false) {
 			grid.makeTetrominoFall();

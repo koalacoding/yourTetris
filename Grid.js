@@ -4,6 +4,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	this.widthStep = width / xNumberOfSquare;
 	this.heightStep = height / yNumberOfSquare;
 
+	var that = this;
+
 	this.gameOver = false;
 
 	/*----------------------------
@@ -273,7 +275,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 	/*-----------------------------------
 	------IMMOBILIZE ACTIVE TETROMINO----
-	-----------------------------------*/	
+	-----------------------------------*/
 
 	this.immobilizeActiveTetrominoIfCannotFall = function() {
 		if (this.canTetrominoFall() == false) { // If the current tetromino cannot move down.
@@ -286,4 +288,95 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 			}			
 		}
 	}
+
+
+	/*----------------------
+	------MOVE TETROMINO----
+	----------------------*/
+
+
+	this.handleTetrominoMove = function() {
+		window.onkeydown = function(event) {
+			that.moveTetrominoLeft(event);
+			that.moveTetrominoRight(event);
+		}
+	}
+
+
+		/*-------------------
+		------TO THE LEFT----
+		-------------------*/	
+
+
+			/*--------------------------------------
+			------CAN TETROMINO MOVE TO THE LEFT----
+			--------------------------------------*/
+
+			this.canTetrominoMoveLeft = function() {
+				for (var y = 0; y < yNumberOfSquare; y++) {
+					// If one of the tetromino's squares is in the first column.
+					if (this.gridData[0][y] == 2) {
+						return false;
+					}
+				}
+
+				return true;		
+			}
+
+			/*----------------------------------
+			------MOVE TETROMINO TO THE LEFT----
+			----------------------------------*/
+
+			this.moveTetrominoLeft = function(event) {
+				if (event.keyCode == 37 && this.canTetrominoMoveLeft() == true) {
+					for (var y = 0; y < yNumberOfSquare; y++) {
+						for (var x = 1; x < xNumberOfSquare; x++) {
+							if (this.gridData[x][y] == 2) {
+								this.gridData[x - 1][y] = 2;
+								this.gridData[x][y] = 0; // Freeing the ancient square's position.
+							}
+							
+						}
+					}
+				}
+			}
+
+
+		/*--------------------
+		------TO THE RIGHT----
+		--------------------*/
+
+
+			/*---------------------------------------
+			------CAN TETROMINO MOVE TO THE RIGHT----
+			---------------------------------------*/
+
+			this.canTetrominoMoveRight = function() {
+				for (var y = 0; y < yNumberOfSquare; y++) {
+					// If one of the tetromino's squares is in the last column.
+					if (this.gridData[xNumberOfSquare - 1][y] == 2) {
+						return false;
+					}
+				}
+
+				return true;		
+			}
+
+			/*-----------------------------------
+			------MOVE TETROMINO TO THE RIGHT----
+			-----------------------------------*/
+
+			this.moveTetrominoRight = function(event) {
+				if (event.keyCode == 39 && this.canTetrominoMoveRight() == true) {
+					for (var y = 0; y < yNumberOfSquare; y++) {
+						for (var x = xNumberOfSquare - 2; x >= 0; x--) {
+							if (this.gridData[x][y] == 2) {
+								this.gridData[x + 1][y] = 2;
+								this.gridData[x][y] = 0; // Freeing the ancient square's position.
+							}
+							
+						}
+					}
+				}
+			}				
 }

@@ -9,6 +9,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Added a grid method to make fall the active tetromino.
 * Added a grid method to generate a new tetromino when the active tetromino cannot fall no more.
 * If a new tetromino cannot be generated because the space is already occupied, game is over.
+* We can now move the tetromino to the left or right.
 
 ## To do.
 
