@@ -13,6 +13,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 immobile tetromino's squares.
 
 ## To do.
+* Allow the player to modify the active tetromino's state by pressing the up arrow key.
 * Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
