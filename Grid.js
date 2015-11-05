@@ -443,14 +443,15 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 	this.modifyTetrominoState = function(event) {
 		if (event.keyCode == 38) { // If the up arrow is pressed.
-			this.modifyActiveTetrominoStateToNext();
+			this.modifyActiveTetrominoPosition();
+      this.drawAllTetrominoSquares(); // To immediatly refresh the grid view.
 		}
 	}
 
 
 		/*-----------------------------------------------
 		------MODIFY ACTIVE TETROMINO STATE TO NEXT------
-		-----------------------------------------------*/
+		-----------------------------------------------
 
 		this.modifyActiveTetrominoStateToNext = function() {
 			switch (this.activeTetrominoForm) {
@@ -467,7 +468,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 					else this.activeTetrominoState = 0;
 					break;
 			}
-		}
+		}*/
 
 		/*------------------------------------------
 		------RETURN CENTER SQUARE COORDINATES------
@@ -510,22 +511,48 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		------MODIFY ACTIVE TETROMINO'S POSITION------
 		--------------------------------------------*/
 
-		this.modifyActiveTetrominoPosition = function(activeTetrominoForm, activeTetrominoState) {
+		this.modifyActiveTetrominoPosition = function() {
+      var i = 0;
+
 			var newCoordX = 0;
 			var newCoordY = 0;
+
+      var activeSquaresCoords = this.getActiveSquaresCoords();
+      var activeSquareX = 0;
+      var activeSquareY = 0;
 
 			var centerSquareCoords = this.returnCenterSquareCoords();
 			var centerSquareCoordsX = centerSquareCoords[0];
 			var centerSquareCoordsY = centerSquareCoords[1];
 
-			for (var y = 0; y < yNumberOfSquare; y++) {
-				for (var x = 0; x < xNumberOfSquare; x++) {
-					if (this.gridData[x][y] == 2) {
-						newCoordX = centerSquareCoordsX + centerSquareCoordsY - y;
-						newCoordY = x + centerSquareCoordsY - centerSquareCoordsX;
-						return array;
-					}
-				}
+      var toRestore = [];
+      var toRestoreX = 0;
+      var toRestoreY = 0;
+
+			for (i = 0; i < activeSquaresCoords.length; i++) {
+        activeSquareX = activeSquaresCoords[i][0];
+        activeSquareY = activeSquaresCoords[i][1];
+
+				newCoordX = centerSquareCoordsX + centerSquareCoordsY - activeSquareY;
+				newCoordY = activeSquareX + centerSquareCoordsY - centerSquareCoordsX;
+
+         // If there is already an active square at the new active square's position.
+        if (this.gridData[newCoordX][newCoordY] == 2) {
+          /* This new square position is going to be deleted as there is already an active square,
+             so we store the coordinates in an array that we will use after the for loop
+             is finished to restore the deleted new position. */
+          toRestore.push([newCoordX, newCoordY]);
+        }
+
+        this.gridData[newCoordX][newCoordY] = 2;
+         // Deleting the old active square's position.
+        this.gridData[activeSquareX][activeSquareY] = 0;
 			}
+
+      for (i = 0; i < toRestore.length; i++) { // Restoring the deleted new active squares.
+        toRestoreX = toRestore[i][0];
+        toRestoreY = toRestore[i][1];
+        this.gridData[toRestoreX][toRestoreY] = 2;
+      }
 		}
 }
