@@ -63,7 +63,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 			var x = squareNumberX * this.widthStep;
 			var y = squareNumberY * this.heightStep;
 			context.fillStyle = color;
-			
+
 			// Using this to clean the non-white square traces.
 			if (color == "#FFFFFF") {
 				context.fillRect(x + 1, y + 1, this.widthStep - 2, this.heightStep - 2);
@@ -75,7 +75,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 		/*----------------------------------
 		------DRAW ALL TETROMINO SQUARES----
-		----------------------------------*/		
+		----------------------------------*/
 
 		this.drawAllTetrominoSquares = function() {
 			for (var y = 0; y < yNumberOfSquare; y++) {
@@ -88,7 +88,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 						this.drawTetrominoSquare(x, y, "#FFFFFF");
 					}
 				}
-			}			
+			}
 		}
 
 
@@ -104,7 +104,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		this.areNewTetrominoCoordinatesAlreadyOccupied = function(newTetrominoCoordinates) {
 			for (var i = 0; i < newTetrominoCoordinates.length; i++) {
 				var x = newTetrominoCoordinates[i][0];
-				var y = newTetrominoCoordinates[i][1];				
+				var y = newTetrominoCoordinates[i][1];
 				if (this.gridData[x][y] != 0) {
 					return true;
 				}
@@ -206,7 +206,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 	    }
 
 	    return newTetrominoCoordinates;
-	 	}	 	
+	 	}
 
 		/*---------------------
 		------NEW TETROMINO----
@@ -233,9 +233,9 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 						this.gridData[x][y] = 1;
 					}
 				}
-			}			
+			}
 		}
-	}		
+	}
 
 
 	/*----------------------
@@ -271,7 +271,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 		/*---------------------------
 		------MAKE TETROMINO FALL----
 		---------------------------*/
-		
+
 		this.handleTetrominoFall = function() {
 			var makeTetrominoFall;
 			makeTetrominoFall = setInterval(function() {
@@ -282,7 +282,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 					if (e.keyCode == 40) {
 						makeTetrominoFall = that.makeTetrominoFall();
 					}
-			}, false);				
+			}, false);
 		}
 
 		this.makeTetrominoFall = function() {
@@ -302,7 +302,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 				that.generateNewTetrominoIfNoActiveTetromino();
 				that.drawAllTetrominoSquares();
-			}	
+			}
 		}
 
 
@@ -326,7 +326,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
 		/*-------------------
 		------TO THE LEFT----
-		-------------------*/	
+		-------------------*/
 
 
 			/*--------------------------------------
@@ -334,14 +334,26 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 			--------------------------------------*/
 
 			this.canTetrominoMoveLeft = function() {
+				// If one of the tetromino's squares is in the first column (so it cannot move to the left).
 				for (var y = 0; y < yNumberOfSquare; y++) {
-					// If one of the tetromino's squares is in the first column.
 					if (this.gridData[0][y] == 2) {
 						return false;
 					}
 				}
 
-				return true;		
+				for (var y = 0; y < yNumberOfSquare; y++) {
+					/* Starting at x = 1 because we already checked above
+						 if there was an active square in the first column. */
+					for (var x = 1; x < xNumberOfSquare; x++) {
+						if (this.gridData[x][y] == 2) { // If the current checked square is an active one.
+							if (this.gridData[x - 1][y] == 1) { // If the square to the left is an immobile one.
+								return false;
+							}
+						}
+					}
+				}
+
+				return true;
 			}
 
 			/*----------------------------------
@@ -356,7 +368,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 								this.gridData[x - 1][y] = 2;
 								this.gridData[x][y] = 0; // Freeing the ancient square's position.
 							}
-							
+
 						}
 					}
 
@@ -382,7 +394,18 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 					}
 				}
 
-				return true;		
+				for (var y = 0; y < yNumberOfSquare; y++) {
+					// Starting at xNumberOfSquare - 2 to start checking at the second last column.
+					for (var x = xNumberOfSquare - 2; x >= 0; x--) {
+						if (this.gridData[x][y] == 2) { // If the current checked square is an active one.
+							if (this.gridData[x + 1][y] == 1) { // If the square to the right is an immobile one.
+								return false;
+							}
+						}
+					}
+				}
+
+				return true;
 			}
 
 			/*-----------------------------------
