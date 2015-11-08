@@ -14,9 +14,10 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * The player can now modify the active tetromino's state by pressing the up arrow key.
 * Fixed a bug that allowed tetrominos to sometimes go through others tetrominos.
 * Full lines are now emptied.
+* Player can now only modify active tetromino's state if it has the space to do it.
+* Resized canvas to center the grid in the middle of the page.
 
 ## To do.
-* Only allow player to modify active tetromino's state if it has the space to do it.
 * Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.

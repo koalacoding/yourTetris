@@ -241,7 +241,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
         }
       }
 
-			this.checkIfLinesAreFull();
+      this.checkIfLinesAreFull();
     }
   }
 
@@ -441,7 +441,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
   this.modifyTetrominoState = function(event) {
     if (event.keyCode == 38) { // If the up arrow is pressed.
-      this.modifyActiveTetrominoPosition();
+      this.modifyActiveTetrominoState();
       this.drawAllTetrominoSquares(); // To immediatly refresh the grid view.
     }
   }
@@ -488,7 +488,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
     ------MODIFY ACTIVE TETROMINO'S POSITION------
     --------------------------------------------*/
 
-    this.modifyActiveTetrominoPosition = function() {
+    this.modifyActiveTetrominoState = function() {
       var i = 0;
 
       var newCoordX = 0;
@@ -505,6 +505,35 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
       var toRestore = [];
       var toRestoreX = 0;
       var toRestoreY = 0;
+
+			var cannotModifyTetrominoState = false;
+
+      // First for loop to check if the user has the space to modify the active tetromino's state.
+      for (i = 0; i < activeSquaresCoords.length; i++) {
+        activeSquareX = activeSquaresCoords[i][0];
+        activeSquareY = activeSquaresCoords[i][1];
+
+        newCoordX = centerSquareCoordsX + centerSquareCoordsY - activeSquareY;
+        newCoordY = activeSquareX + centerSquareCoordsY - centerSquareCoordsX;
+
+				// If the new square would be out of the grid.
+				if (newCoordX < 0 || newCoordX > (xNumberOfSquare - 1)) {
+					cannotModifyTetrominoState = true;
+					break;
+				}
+
+				if (newCoordY < 0 || newCoordY > (yNumberOfSquare - 1)) { // Same for Y.
+					cannotModifyTetrominoState = true;
+					break;
+				}
+
+				if (this.gridData[newCoordX][newCoordY] == 1) {
+					cannotModifyTetrominoState = true;
+					break;
+				};
+      }
+
+			if (cannotModifyTetrominoState) return;
 
       for (i = 0; i < activeSquaresCoords.length; i++) {
         activeSquareX = activeSquaresCoords[i][0];
@@ -541,59 +570,59 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
   ---------------------------------------*/
 
 
-	  /*-----------------------------------------
-	  ----------CHECK IF LINES ARE FULL----------
-	  -----------------------------------------*/
+    /*-----------------------------------------
+    ----------CHECK IF LINES ARE FULL----------
+    -----------------------------------------*/
 
-	  this.checkIfLinesAreFull = function() {
-			var linesEmptiedYcoord = [];
+    this.checkIfLinesAreFull = function() {
+      var linesEmptiedYcoord = [];
 
-	    for (var y = 0; y < yNumberOfSquare; y++) {
-	      var thisLineIsFull = true;
+      for (var y = 0; y < yNumberOfSquare; y++) {
+        var thisLineIsFull = true;
 
-	      for (var x = 0; x < xNumberOfSquare; x++) {
-	        if (this.gridData[x][y] != 1) { // If the current square is not an immobile one.
-	          thisLineIsFull = false;
-	          break; // We skip this line because it can't be full.
-	        }
-	      }
+        for (var x = 0; x < xNumberOfSquare; x++) {
+          if (this.gridData[x][y] != 1) { // If the current square is not an immobile one.
+            thisLineIsFull = false;
+            break; // We skip this line because it can't be full.
+          }
+        }
 
-	      if (thisLineIsFull) {
-	        this.emptyLine(y); // If the current line is full, we empty it.
-					linesEmptiedYcoord.push(y);
-	        y = 0; // Starting back from the beginning.
-	      }
-	    }
+        if (thisLineIsFull) {
+          this.emptyLine(y); // If the current line is full, we empty it.
+          linesEmptiedYcoord.push(y);
+          y = 0; // Starting back from the beginning.
+        }
+      }
 
-			for (var i = 0; i < linesEmptiedYcoord.length; i++) {
-				this.makeAllSquaresFallOneLine(linesEmptiedYcoord[i]);
-			}
+      for (var i = 0; i < linesEmptiedYcoord.length; i++) {
+        this.makeAllSquaresFallOneLine(linesEmptiedYcoord[i]);
+      }
 
-			this.drawAllTetrominoSquares(); // Refreshing the view.
-	  }
+      this.drawAllTetrominoSquares(); // Refreshing the view.
+    }
 
-		/*----------------------------
-	  ----------EMPTY LINE----------
-	  ----------------------------*/
+    /*----------------------------
+    ----------EMPTY LINE----------
+    ----------------------------*/
 
-	  this.emptyLine = function(y) {
+    this.emptyLine = function(y) {
       for (var x = 0; x < xNumberOfSquare; x++) {
         this.gridData[x][y] = 0;
       }
-	  }
+    }
 
-		/*-----------------------------------------------------
-	  ----------MAKE ALL SQUARES FALL DOWN ONE LINE----------
-	  -----------------------------------------------------*/
+    /*-----------------------------------------------------
+    ----------MAKE ALL SQUARES FALL DOWN ONE LINE----------
+    -----------------------------------------------------*/
 
-	  this.makeAllSquaresFallOneLine = function(startingLine) {
-			for (var y = startingLine - 1; y >= 0; y--) {
-	      for (var x = 0; x < xNumberOfSquare; x++) {
-	        if (this.gridData[x][y] == 1) {
-	          this.gridData[x][y + 1] = 1;
-						this.gridData[x][y] = 0;
-	        }
-	      }
-			}
-	  }
+    this.makeAllSquaresFallOneLine = function(startingLine) {
+      for (var y = startingLine - 1; y >= 0; y--) {
+        for (var x = 0; x < xNumberOfSquare; x++) {
+          if (this.gridData[x][y] == 1) {
+            this.gridData[x][y + 1] = 1;
+            this.gridData[x][y] = 0;
+          }
+        }
+      }
+    }
 }
