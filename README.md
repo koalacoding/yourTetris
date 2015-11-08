@@ -13,14 +13,13 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
   immobile tetromino's squares.
 * The player can now modify the active tetromino's state by pressing the up arrow key.
 * Fixed a bug that allowed tetrominos to sometimes go through others tetrominos.
+* Full lines are now emptied.
 
 ## To do.
-* Remove a line when it is fully filled with immobile squares.
+* Only allow player to modify active tetromino's state if it has the space to do it.
 * Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
 * Top score system.
-* To fix : if a player modifies the active tetromino's position while it is in the top of the grid,
-  squares can be deleted if they go outside of the grid.
 
 ## To commit.
