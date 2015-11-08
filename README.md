@@ -15,7 +15,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Fixed a bug that allowed tetrominos to sometimes go through others tetrominos.
 * Full lines are now emptied.
 * Player can now only modify active tetromino's state if it has the space to do it.
-* Resized canvas to center the grid in the middle of the page.
+* Canvas resized to center the grid in the middle of the page.
 
 ## To do.
 * Add a text message when the game is over.
