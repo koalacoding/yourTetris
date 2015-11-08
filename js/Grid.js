@@ -1,4 +1,4 @@
-function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
+function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
   this.gridData = []; // 2d array.
 
   this.widthStep = width / xNumberOfSquare;
@@ -11,20 +11,34 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
   var that = this;
 
-  this.gameOver = false;
 
-  /*----------------------------
-  ------INITIALIZE GRID DATA----
-  ----------------------------*/
+  /*--------------------------------------
+  ----------------------------------------
+  --------------INITIALIZING--------------
+  ----------------------------------------
+  --------------------------------------*/
 
-  this.initializeGridData = function() {
-    for (var x = 0; x < xNumberOfSquare; x++) {
-      this.gridData[x] = [];
-      for (var y = 0; y < yNumberOfSquare; y++) {
-        this.gridData[x][y] = 0; // 0 = empty square.
+  this.initialize = function() {
+    this.initializeGridData();
+  	this.drawGrid();
+  	this.handleKeyPresses();
+  	this.handleTetrominoFall();
+  }
+
+
+    /*------------------------------
+    ------INITIALIZE GRID DATA------
+    ------------------------------*/
+
+    this.initializeGridData = function() {
+      for (var x = 0; x < xNumberOfSquare; x++) {
+        this.gridData[x] = [];
+        for (var y = 0; y < yNumberOfSquare; y++) {
+          this.gridData[x][y] = 0; // 0 = empty square.
+        }
       }
     }
-  }
+
 
   /*-----------------
   ------DRAW GRID----
@@ -137,7 +151,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 
         // If there is already a square in any of the new tetromino coordinates.
         if (this.areNewTetrominoCoordinatesAlreadyOccupied(newTetrominoCoordinates) == true) {
-          this.gameOver = true;
+          Game.gameOver = true;
+          Game.proposeNewGame();
         }
 
         else { // If there is space for the new tetromino, we generate it.
@@ -292,7 +307,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
     this.makeTetrominoFall = function() {
       that.immobilizeActiveTetrominoIfCannotFall();
 
-      if (that.gameOver == false) {
+      if (Game.gameOver == false) {
         if (that.canTetrominoFall() == true) {
           for (var y = yNumberOfSquare - 2; y >= 0; y--) {
             for (var x = 0; x < xNumberOfSquare; x++) {

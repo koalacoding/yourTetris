@@ -16,9 +16,10 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Full lines are now emptied.
 * Player can now only modify active tetromino's state if it has the space to do it.
 * Canvas resized to center the grid in the middle of the page.
+* Added a pop-up when the game is over using a jQuery UI widget to ask the user
+  if he wants to play again.
 
 ## To do.
-* Add a text message when the game is over.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
 * Top score system.

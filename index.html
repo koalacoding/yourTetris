@@ -4,16 +4,23 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta name="description" content="Tetris game.">
 
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/css/main.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" defer></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" defer></script>
+    <script src="/js/Game.js" defer></script>
+    <script src="/js/Grid.js" defer></script>
+    <script src="/js/main.js" defer></script>
+
     <title>Tetris</title>
   </head>
 
   <body style="overflow: hidden; text-align: center;">
-      <canvas id="canvas" width="252" height="360" style="margin-top: 1%;">
-          Your browser don't support &lt;canvas&gt;
-      </canvas>
+    <canvas id="canvas" width="252" height="360" style="margin-top: 1%;">
+      Your browser don't support &lt;canvas&gt;
+    </canvas>
 
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-      <script src="/js/Grid.js"></script>
-      <script src="/js/main.js"></script>
+    <div id="dialog-confirm" style="display: none;"><p></p></div>
   </body>
 </html>
