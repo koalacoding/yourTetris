@@ -10,7 +10,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * We can now move the tetromino to the left or right.
 * We can now accelerate the tetromino's fall by pressing the down arrow key.
 * Fixed a bug that allowed to move the active tetromino left or right through
-immobile tetromino's squares.
+  immobile tetromino's squares.
 * The player can now modify the active tetromino's state by pressing the up arrow key.
 
 ## To do.
@@ -20,5 +20,7 @@ immobile tetromino's squares.
 * Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
 * Top score system.
+* To fix : if a player modifies the active tetromino's position while it is in the top of the grid,
+  squares can be deleted if they go outside of the grid.
 
 ## To commit.
