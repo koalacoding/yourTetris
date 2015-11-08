@@ -259,15 +259,11 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context) {
 				for (var x = 0; x < xNumberOfSquare; x++) {
 					if (that.gridData[x][y] > 1) { // If the current tetromino square is an active one.
 						activeTetrominoSquareFound = true;
-						// If we are at the last line of the grid or if the square below is not an empty one.
-						if (y == yNumberOfSquare - 1 || this.gridData[x][y + 1] != 0) {
+						// If we are at the last line of the grid or if the square below is an immobile one.
+						if (y == yNumberOfSquare - 1 || this.gridData[x][y + 1] == 1) {
 							return false;
 						}
 					}
-				}
-
-				if (activeTetrominoSquareFound == true) {
-					return true;
 				}
 			}
 

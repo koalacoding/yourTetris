@@ -12,9 +12,9 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Fixed a bug that allowed to move the active tetromino left or right through
   immobile tetromino's squares.
 * The player can now modify the active tetromino's state by pressing the up arrow key.
+* Fixed a bug that allowed tetrominos to sometimes go through others tetrominos.
 
 ## To do.
-* Fix a bug where the center square of an active tetromino can go through immobile squares.
 * Remove a line when it is fully filled with immobile squares.
 * Add a text message when the game is over.
 * Add a random color to the tetrominos.
