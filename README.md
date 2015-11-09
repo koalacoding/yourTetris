@@ -18,10 +18,10 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Canvas resized to center the grid in the middle of the page.
 * Added a pop-up when the game is over using a jQuery UI widget to ask the user
   if he wants to play again.
+* Fixed a bug where sometimes the hexadecimal number generated for the color
+  was smaller than 6 characters long.
+* Added a random color to the tetrominos.
 
 ## To do.
-* Add a random color to the tetrominos.
 * Add a border to the tetromino squares.
 * Top score system.
-
-## To commit.
