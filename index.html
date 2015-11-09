@@ -5,19 +5,28 @@
     <meta name="description" content="Tetris game.">
 
 		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link href='https://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/main.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" defer></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" defer></script>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/handlers/FadeHandler.js" defer></script>
+    <script src="/js/handlers/ButtonHandler.js" defer></script>
     <script src="/js/Game.js" defer></script>
     <script src="/js/Grid.js" defer></script>
-    <script src="/js/main.js" defer></script>
 
     <title>Tetris</title>
   </head>
 
-  <body style="overflow: hidden; text-align: center;">
-    <canvas id="canvas" width="252" height="360" style="margin-top: 1%;">
+  <body>
+    <div id="menu">
+      <div id="title">Your Tetris</div>
+
+      <button id="start_game_button">Start a new game</button>
+    </div>
+    
+    <canvas id="canvas" width="252" height="360">
       Your browser don't support &lt;canvas&gt;
     </canvas>
 

@@ -1,8 +1,9 @@
-function Game() {
+function Game(fadeHandler) {
   var that = this;
 
   var context = $('#canvas')[0].getContext('2d');
-  var grid = new Grid(252, 10, 360, 16, context, this);
+
+  this.grid = new Grid(252, 10, 360, 16, context, that, fadeHandler);
 
   this.gameOver = false;
 
@@ -18,15 +19,19 @@ function Game() {
     ------START GAME------
     --------------------*/
 
-    this.startGame = function() {
-      grid.initialize();
+    this.startGame = function(fadeHandler) {
+      that.gameOver = false;
+      $('#canvas').fadeOut(); // If the user plays again.
+      context.clearRect(0, 0, 252, 360); // Deleting everything drawn on the canvas.
+      that.grid.initialize();
+      fadeHandler.fadeCanvasIn();
     }
 
     /*--------------------------
     ------PROPOSE NEW GAME------
     --------------------------*/
 
-    this.proposeNewGame = function() {
+    this.proposeNewGame = function(fadeHandler) {
       $( "#dialog-confirm" ).attr('title', 'Game over');
   		$( ".ui-dialog-title" ).text('Game over');
       $( "#dialog-confirm p" ).text('Do you want to play again ?');
@@ -36,11 +41,12 @@ function Game() {
   			modal: true,
   			buttons: {
   				Yes: function() {
-            that.restartGame();
+            that.startGame(fadeHandler);
   					$( this ).dialog( "close" );
   				},
   				No: function() {
   					$( this ).dialog( "close" );
+            fadeHandler.fadeCanvasOut();
   				}
   			}
   		});
@@ -50,11 +56,10 @@ function Game() {
     ------RESTART GAME------
     ----------------------*/
 
-    this.restartGame = function() {
-      context.clearRect(0, 0, 252, 360); // Deleting everything drawn on the canvas.
-
-      grid.initializeGridData();
-      grid.drawGrid();
+    /*this.restartGame = function() {
+      that.grid.gridData = [];
+      that.grid.initializeGridData();
+      that.grid.drawAllTetrominoSquares();
       this.gameOver = false;
-    }
+    }*/
 }

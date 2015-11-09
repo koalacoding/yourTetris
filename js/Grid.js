@@ -1,4 +1,4 @@
-function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
+function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fadeHandler) {
   this.gridData = []; // 2d array.
 
   this.widthStep = width / xNumberOfSquare;
@@ -6,6 +6,8 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
 
   this.activeTetrominoForm = 0;
   this.activeTetrominoState = 0;
+
+  this.accelerateActiveTetrominoFallHandlersHaveBeenSet = false;
 
   this.fallingSpeed = 1000; // In millisecond.
 
@@ -22,7 +24,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
     this.initializeGridData();
   	this.drawGrid();
   	this.handleKeyPresses();
-  	this.handleTetrominoFall();
+  	this.activeTetrominoFallHandler();
   }
 
 
@@ -46,12 +48,14 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
   -------------------*/
 
   this.drawGrid = function() {
+    context.lineWidth = 0.8;
+
+    // beginPath() and closePath() are here used to be able to modify the lines width more easily.
     // Draw horizontal lines.
     for (var y = 0; y <= height; y += this.heightStep) {
       context.beginPath();
       context.moveTo(0, y);
       context.lineTo(width, y);
-      context.lineWidth = 1;
       context.stroke(); // Used to show the draw.
       context.closePath();
     }
@@ -61,7 +65,6 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
       context.beginPath();
       context.moveTo(x, 0);
       context.lineTo(x, height);
-      context.lineWidth = 1;
       context.stroke(); // Used to show the draw.
       context.closePath();
     }
@@ -148,7 +151,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
 
       if (thereIsAnActiveTetromino == false) {
         var randomNumber = Math.floor(Math.random() * 7); // Random number between 0 and 6.
-        
+
         // toString(16) to convert to hexadecimal. Max 14000000 to avoid too bright colors.
         var randomColor = (Math.floor(Math.random() * 14000001)).toString(16);
         // If randomColor is not 6 characters long, we append zeros to it.
@@ -159,8 +162,9 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
 
         // If there is already a square in any of the new tetromino coordinates.
         if (this.areNewTetrominoCoordinatesAlreadyOccupied(newTetrominoCoordinates) == true) {
-          Game.gameOver = true;
-          Game.proposeNewGame();
+          this.handleTetrominoFall = function() {};
+          game.gameOver = true;
+          game.proposeNewGame(fadeHandler);
         }
 
         else { // If there is space for the new tetromino, we generate it.
@@ -257,7 +261,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
   -----------------------------------*/
 
   this.immobilizeActiveTetrominoIfCannotFall = function() {
-    if (that.canTetrominoFall() == false) { // If the current tetromino cannot move down.
+    if (that.canActiveTetrominoFall() == false) { // If the current tetromino cannot move down.
       for (var y = 0; y < yNumberOfSquare; y++) {
         for (var x = 0; x < xNumberOfSquare; x++) {
           if (this.gridData[x][y][0] > 1) { // If the current square is an active one.
@@ -271,15 +275,63 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
   }
 
 
-  /*----------------------
-  ------TETROMINO FALL----
-  ----------------------*/
+  /*----------------------------------------
+  ------------------------------------------
+  --------------TETROMINO FALL--------------
+  ------------------------------------------
+  ----------------------------------------*/
+
+
+    /*---------------------------------------
+    ------ACTIVE TETROMINO FALL HANDLER------
+    ---------------------------------------*/
+
+    this.activeTetrominoFallHandler = function() {
+      function fall() {
+        if (that.canActiveTetrominoFall()) {
+          that.makeActiveTetrominoFallOneLine();
+        }
+
+        that.immobilizeActiveTetrominoIfCannotFall();
+
+        that.generateNewTetrominoIfNoActiveTetromino();
+        
+        that.drawAllTetrominoSquares();
+      }
+
+      function myFunction() {
+        setTimeout(function() {
+          if (!game.gameOver) { // If the game is not over.
+            fall();
+            myFunction();
+          }
+        }, that.fallingSpeed);
+      }
+
+      myFunction();
+
+      if (!this.accelerateActiveTetrominoFallHandlersHaveBeenSet) {
+        this.accelerateActiveTetrominoFallHandlersHaveBeenSet = true;
+
+        window.addEventListener("keydown", function(e) {
+            if (e.keyCode == 40) {
+              if (!game.gameOver) fall();
+            }
+        }, false);
+
+        window.addEventListener("keyup", function(e) {
+            if (e.keyCode == 40) {
+              if (!game.gameOver) that.fallingSpeed = 1000;
+            }
+        }, false);
+      }
+    }
 
     /*----------------------------
     ------CAN TETROMINO FALL ?----
     ----------------------------*/
 
-    this.canTetrominoFall = function() {
+    this.canActiveTetrominoFall = function() {
       var activeTetrominoSquareFound = false;
 
       for (var y = yNumberOfSquare - 1; y > 0; y--) { // Starting at the bottom of the grid.
@@ -297,41 +349,19 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, Game) {
       return true;
     }
 
-    /*---------------------------
-    ------MAKE TETROMINO FALL----
-    ---------------------------*/
+    /*-------------------------------------------
+    ------MAKE ACTIVE TETROMINO FALL ONE LINE----
+    -------------------------------------------*/
 
-    this.handleTetrominoFall = function() {
-      var makeTetrominoFall;
-      makeTetrominoFall = setInterval(function() {
-                            that.makeTetrominoFall();
-                          }, that.fallingSpeed);
-
-      window.addEventListener("keydown", function(e) {
-          if (e.keyCode == 40) {
-            makeTetrominoFall = that.makeTetrominoFall();
-          }
-      }, false);
-    }
-
-    this.makeTetrominoFall = function() {
-      that.immobilizeActiveTetrominoIfCannotFall();
-
-      if (Game.gameOver == false) {
-        if (that.canTetrominoFall() == true) {
-          for (var y = yNumberOfSquare - 2; y >= 0; y--) {
-            for (var x = 0; x < xNumberOfSquare; x++) {
-              if (that.gridData[x][y][0] > 1) { // If the square is an active one.
-                that.gridData[x][y + 1][0] = that.gridData[x][y][0];
-                that.gridData[x][y + 1][1] = that.gridData[x][y][1];
-                that.gridData[x][y][0] = 0; // Emptying the place where the square was before falling.
-              }
-            }
+    this.makeActiveTetrominoFallOneLine = function() {
+      for (var y = yNumberOfSquare - 2; y >= 0; y--) {
+        for (var x = 0; x < xNumberOfSquare; x++) {
+          if (that.gridData[x][y][0] > 1) { // If the square is an active one.
+            that.gridData[x][y + 1][0] = that.gridData[x][y][0];
+            that.gridData[x][y + 1][1] = that.gridData[x][y][1];
+            that.gridData[x][y][0] = 0; // Emptying the place where the square was before falling.
           }
         }
-
-        that.generateNewTetrominoIfNoActiveTetromino();
-        that.drawAllTetrominoSquares();
       }
     }
 

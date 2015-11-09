@@ -21,7 +21,8 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Fixed a bug where sometimes the hexadecimal number generated for the color
   was smaller than 6 characters long.
 * Added a random color to the tetrominos.
+* Added a start menu.
+* The user has now the choice to go back to the start menu after his game is over.
 
 ## To do.
-* Add a border to the tetromino squares.
 * Top score system.
