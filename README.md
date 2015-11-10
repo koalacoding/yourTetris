@@ -24,6 +24,6 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Added a start menu.
 * The user has now the choice to go back to the start menu after his game is over.
 * Added a system that stores the user's top score in a cookie and shows it in the menu.
+* Checked the compatibility for Firefox 41 and IE 11.
 
 ## To do.
-* Check the compatibility for Firefox and IE.
