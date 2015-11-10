@@ -1,17 +1,12 @@
 function FadeHandler() {
-  this.fadeMenuIn = function() {
+
+this.fadeCanvasOut = function() {
+  $('#game').fadeOut(function() {
+    var score = new Score();
+    score.showTopScoreIfItExists();
+    
     $('#menu').fadeIn(1000);
-  }
+  });
+}
 
-  this.fadeCanvasIn = function() {
-    $('#menu').fadeOut(function() {
-      $('#canvas').fadeIn(1500);
-    });
-  }
-
-  this.fadeCanvasOut = function() {
-    $('#canvas').fadeOut(function() {
-      $('#menu').fadeIn(1000);
-    });
-  }
 }

@@ -1,9 +1,12 @@
-function Game(fadeHandler) {
+function Game() {
   var that = this;
+
+  var fadeHandler = new FadeHandler();
 
   var context = $('#canvas')[0].getContext('2d');
 
-  this.grid = new Grid(252, 10, 360, 16, context, that, fadeHandler);
+  var score = new Score();
+  this.grid = new Grid(252, 10, 360, 16, context, that, fadeHandler, score);
 
   this.gameOver = false;
 
@@ -19,12 +22,19 @@ function Game(fadeHandler) {
     ------START GAME------
     --------------------*/
 
-    this.startGame = function(fadeHandler) {
-      that.gameOver = false;
-      $('#canvas').fadeOut(); // If the user plays again.
-      context.clearRect(0, 0, 252, 360); // Deleting everything drawn on the canvas.
-      that.grid.initialize();
-      fadeHandler.fadeCanvasIn();
+    this.startGame = function() {
+      $('#menu').fadeOut(function() {
+        that.gameOver = false;
+
+        $('#game').fadeOut(function() { // If the user was already playing a game.
+          $('#score span').text('0'); // Setting the score to zero.
+        });
+
+        context.clearRect(0, 0, 252, 360); // Deleting everything drawn on the canvas.
+        that.grid.initialize();
+
+        $('#game').fadeIn();
+      });
     }
 
     /*--------------------------

@@ -1,9 +1,11 @@
 $(function() {
-  var fadeHandler = new FadeHandler();
-  fadeHandler.fadeMenuIn();
+  var score = new Score();
+  score.showTopScoreIfItExists();
 
-  var game = new Game(fadeHandler);
+  $('#menu').fadeIn(1000);
+
+  var game = new Game();
 
   var buttonHandler = new ButtonHandler();
-  buttonHandler.handleStartGameButton(game.startGame, fadeHandler);
+  buttonHandler.handleStartGameButton(game.startGame);
 });

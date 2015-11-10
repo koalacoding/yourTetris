@@ -23,6 +23,7 @@ Tetris coded with HTML5 and Javascript / jQuery using <canvas>.
 * Added a random color to the tetrominos.
 * Added a start menu.
 * The user has now the choice to go back to the start menu after his game is over.
+* Added a system that stores the user's top score in a cookie and shows it in the menu.
 
 ## To do.
-* Top score system.
+* Check the compatibility for Firefox and IE.

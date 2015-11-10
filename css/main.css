@@ -9,76 +9,99 @@ body {
   text-align: center;
 }
 
-/*-----------------------------------
--------------------------------------
---------------UI DIALOG--------------
--------------------------------------
------------------------------------*/
-
-.ui-dialog {
-  font-size: 12px;
-}
-
-
-/*------------------------------
---------------------------------
---------------MENU--------------
---------------------------------
-------------------------------*/
-
-#menu {
-  display: none;
-}
-
-
-  /*-----------------------
-  ----------TITLE----------
-  -----------------------*/
-
-  #title {
-    margin-bottom: 30px;
-
-    font-family: 'Oswald', arial;
-    font-size: 55px;
-  }
-
   /*-----------------------------------
-  ----------START GAME BUTTON----------
+  -------------------------------------
+  --------------UI DIALOG--------------
+  -------------------------------------
   -----------------------------------*/
 
-  #start_game_button {
-    border-radius: 3px;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    font-family: Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
-    font-size: 15px;
-    font-style: normal;
-    font-weight: bold;
-    height: 40px;
-    line-height: 20px;
-    padding-bottom: 6px;
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 6px;
-    text-shadow: rgba(0, 0, 0, 0.14902) 0px -1px 0px;
-    width: 200px;
-    border-radius: 3px;
-    border: 1px solid grey;
-  	background-image: linear-gradient(rgb(138, 221, 109), rgb(96, 176, 68));
+  .ui-dialog {
+    font-size: 12px;
   }
 
-  #start_game_button:hover {
-    background-image: linear-gradient(rgb(121, 216, 88), rgb(86, 158, 61));
+
+  /*------------------------------
+  --------------------------------
+  --------------MENU--------------
+  --------------------------------
+  ------------------------------*/
+
+  #game {
+    display: none;
   }
-  
 
-/*--------------------------------
-----------------------------------
---------------CANVAS--------------
-----------------------------------
---------------------------------*/
 
-#canvas {
-  display: none;
-  margin-top: 1%;
-}
+    /*-----------------------
+    ----------TITLE----------
+    -----------------------*/
+
+    #title {
+      font-family: 'Oswald', arial;
+      font-size: 55px;
+    }
+
+    /*-----------------------------------
+    ----------START GAME BUTTON----------
+    -----------------------------------*/
+
+    #start_game_button {
+      margin-top: 30px;
+      
+      border-radius: 3px;
+      color: rgb(255, 255, 255);
+      cursor: pointer;
+      font-family: Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
+      font-size: 15px;
+      font-style: normal;
+      font-weight: bold;
+      height: 40px;
+      line-height: 20px;
+      padding-bottom: 6px;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 6px;
+      text-shadow: rgba(0, 0, 0, 0.14902) 0px -1px 0px;
+      width: 200px;
+      border-radius: 3px;
+      border: 1px solid grey;
+    	background-image: linear-gradient(rgb(138, 221, 109), rgb(96, 176, 68));
+    }
+
+    #start_game_button:hover {
+      background-image: linear-gradient(rgb(121, 216, 88), rgb(86, 158, 61));
+    }
+
+    /*---------------------------
+    ----------TOP SCORE----------
+    ---------------------------*/
+
+    #topscore {
+      margin-top: 30px;
+
+      font-family: 'Oswald', arial;
+      font-size: 15px;
+    }
+
+
+  /*--------------------------------
+  ----------------------------------
+  --------------CANVAS--------------
+  ----------------------------------
+  --------------------------------*/
+
+  #canvas {
+    margin-top: 1%;
+  }
+
+  /*-------------------------------
+  ---------------------------------
+  --------------SCORE--------------
+  ---------------------------------
+  -------------------------------*/
+
+  #score {
+    margin-top: 20px;
+
+    font-size: 20px;
+    font-family: 'Oswald', arial;
+  }

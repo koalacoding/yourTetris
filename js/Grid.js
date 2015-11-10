@@ -1,4 +1,4 @@
-function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fadeHandler) {
+function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fadeHandler, score) {
   this.gridData = []; // 2d array.
 
   this.widthStep = width / xNumberOfSquare;
@@ -164,6 +164,10 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fa
         if (this.areNewTetrominoCoordinatesAlreadyOccupied(newTetrominoCoordinates) == true) {
           this.handleTetrominoFall = function() {};
           game.gameOver = true;
+
+          var currentScore = $('#score span').text();
+          Cookies.set('topScore', currentScore, 365); // Cookie stored 365 days.
+
           game.proposeNewGame(fadeHandler);
         }
 
@@ -295,7 +299,7 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fa
         that.immobilizeActiveTetrominoIfCannotFall();
 
         that.generateNewTetrominoIfNoActiveTetromino();
-        
+
         that.drawAllTetrominoSquares();
       }
 
@@ -655,9 +659,11 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fa
 
       for (var i = 0; i < linesEmptiedYcoord.length; i++) {
         this.makeAllSquaresFallOneLine(linesEmptiedYcoord[i]);
+
+        score.addOneToScore();
       }
 
-      this.drawAllTetrominoSquares(); // Refreshing the view.
+      this.drawAllTetrominoSquares(); // Refreshing the view in case lines have been emptied.
     }
 
     /*----------------------------
