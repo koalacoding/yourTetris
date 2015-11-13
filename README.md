@@ -1,6 +1,8 @@
 # tetris
 Tetris coded in Javascript / jQuery using the HTML5 Canvas.
 
+Example : http://yourtetris.appspot.com
+
 ## Steps finished.
 * Added a grid method : drawing a tetromino square on the grid.
 * Added a grid method : generate new tetromino.
