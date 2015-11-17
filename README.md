@@ -29,3 +29,4 @@ Example : http://yourtetris.appspot.com
 * Checked the compatibility for Firefox 41 and IE 11.
 
 ## To do.
+* Don't overwrite user's cookie if the score the user just made is lower than the score in the cookie.
