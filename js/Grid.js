@@ -162,11 +162,19 @@ function Grid(width, xNumberOfSquare, height, yNumberOfSquare, context, game, fa
 
         // If there is already a square in any of the new tetromino coordinates.
         if (this.areNewTetrominoCoordinatesAlreadyOccupied(newTetrominoCoordinates) == true) {
-          this.handleTetrominoFall = function() {};
+          var currentScore = parseInt($('#score span').text());
+
           game.gameOver = true;
 
-          var currentScore = $('#score span').text();
-          Cookies.set('topScore', currentScore, 365); // Cookie stored 365 days.
+          // Storing the score the user just made in a cookie.
+          if (typeof Cookies.get('topScore') != 'undefined') { // If the cookie "topScore" exists.
+            var topScore = parseInt(Cookies.get('topScore'));
+
+            // If the score just user just made is greater than the previous topScore.
+            if (currentScore > topScore) {
+              Cookies.set('topScore', currentScore, 365); // Cookie stored 365 days.
+            }
+          }
 
           game.proposeNewGame(fadeHandler);
         }
